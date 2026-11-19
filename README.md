@@ -26,54 +26,28 @@ B.Tech Computer Networks Lab experiments implemented in C using socket programmi
 ```
 Computer-Networks-Lab/
 ├── 01_TCP_Factorial/
-│   ├── factorialclient.c       # Factorial Client
-│   ├── factorialserver.c       # Factorial Server
-│   ├── factclient.c            # Alternate client variant
-│   ├── factserver.c            # Alternate server variant
-│   ├── client.c                # (Copy of factorialclient.c)
-│   ├── server.c                # (Copy of factorialserver.c)
+│   ├── client.c                # Factorial Client
+│   ├── server.c                # Factorial Server
 │   └── README.md
 │
 ├── 02_TCP_Matrix_Classification/
-│   ├── matrixclient.c          # Matrix Client
-│   ├── matrixserver.c          # Matrix Server (determines type)
-│   ├── matclient.c             # Alternate client variant
-│   ├── matserver.c             # Alternate server variant
-│   ├── mclient.c               # Matrix client with random generation
-│   ├── mserver.c               # Matrix server with random generation
-│   ├── client.c                # (Copy of matrixclient.c)
-│   ├── server.c                # (Copy of matrixserver.c)
+│   ├── client.c                # Matrix Client
+│   ├── server.c                # Matrix Type Classifier Server
 │   └── README.md
 │
 ├── 03_UDP_Abbreviation_Expander/
-│   ├── meaningclient.c         # Sentence translation client
-│   ├── meaningserver.c         # Abbreviation lookup server
-│   ├── abbclient.c             # Abbreviation client variant
-│   ├── abbserver.c             # Abbreviation server variant
-│   ├── abbrclient.c            # Abbreviation client variant
-│   ├── abbrserver.c            # Abbreviation server variant
-│   ├── client.c                # (Copy of meaningclient.c)
-│   ├── server.c                # (Copy of meaningserver.c)
+│   ├── client.c                # Sentence Translation Client
+│   ├── server.c                # Abbreviation Lookup Server
 │   └── README.md
 │
 ├── 04_UDP_Time_Server/
-│   ├── timeclient.c            # UDP Time Client
-│   ├── timeserver.c            # UDP Time Server
-│   ├── tclient.c               # Alternate time client
-│   ├── tserver.c               # Alternate time server
-│   ├── client.c                # (Copy of timeclient.c)
-│   ├── server.c                # (Copy of timeserver.c)
+│   ├── client.c                # UDP Time Client
+│   ├── server.c                # UDP Time Server
 │   └── README.md
 │
 ├── 05_TCP_MultiClient_Chat/
-│   ├── multiclient.c           # Multithreaded Chat Client
-│   ├── multiserver.c           # Multithreaded Chat Server
-│   ├── mulclient.c             # Alternate multichat client
-│   ├── mulserver.c             # Alternate multichat server
-│   ├── mullcli.c               # Alternate client variant
-│   ├── mullser.c               # Alternate server variant
-│   ├── client.c                # (Copy of multiclient.c)
-│   ├── server.c                # (Copy of multiserver.c)
+│   ├── client.c                # Multithreaded Chat Client
+│   ├── server.c                # Multithreaded Chat Server
 │   └── README.md
 │
 ├── .gitignore
@@ -99,7 +73,7 @@ Computer-Networks-Lab/
 ### 3. UDP Abbreviation Expander Server & Client
 - **Folder**: `03_UDP_Abbreviation_Expander`
 - **Protocol**: UDP (`SOCK_DGRAM`)
-- **Port**: `8080` / `9002`
+- **Port**: `8080`
 - **Description**: Client sends a sentence with abbreviations (such as `tbh`, `idk`, `lol`, `omg`, `asap`). The server translates the abbreviations to their full meanings and sends back the expanded sentence.
 
 ### 4. UDP Daytime / Time Server & Client
@@ -124,12 +98,12 @@ Open two terminal windows:
 ```bash
 # Terminal 1 - Server
 cd 01_TCP_Factorial
-gcc factorialserver.c -o server
+gcc server.c -o server
 ./server
 
 # Terminal 2 - Client
 cd 01_TCP_Factorial
-gcc factorialclient.c -o client
+gcc client.c -o client
 ./client
 ```
 
@@ -137,12 +111,12 @@ gcc factorialclient.c -o client
 ```bash
 # Terminal 1 - Server
 cd 04_UDP_Time_Server
-gcc timeserver.c -o server
+gcc server.c -o server
 ./server
 
 # Terminal 2 - Client
 cd 04_UDP_Time_Server
-gcc timeclient.c -o client
+gcc client.c -o client
 ./client
 ```
 
@@ -150,17 +124,17 @@ gcc timeclient.c -o client
 ```bash
 # Terminal 1 - Server
 cd 05_TCP_MultiClient_Chat
-gcc multiserver.c -o server -pthread
+gcc server.c -o server -pthread
 ./server
 
 # Terminal 2 - Client 1
 cd 05_TCP_MultiClient_Chat
-gcc multiclient.c -o client -pthread
+gcc client.c -o client -pthread
 ./client
 
 # Terminal 3 - Client 2
 cd 05_TCP_MultiClient_Chat
-gcc multiclient.c -o client -pthread
+gcc client.c -o client -pthread
 ./client
 ```
 
