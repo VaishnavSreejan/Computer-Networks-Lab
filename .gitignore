@@ -1,0 +1,34 @@
+# Compiled Object files and libraries
+*.o
+*.obj
+*.so
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*.bin
+
+# Compiled binaries without extensions in experiment folders
+01_TCP_Factorial/server
+01_TCP_Factorial/client
+02_TCP_Matrix_Classification/server
+02_TCP_Matrix_Classification/client
+02_TCP_Matrix_Classification/random_client
+03_UDP_Abbreviation_Expander/server
+03_UDP_Abbreviation_Expander/client
+04_UDP_Time_Server/server
+04_UDP_Time_Server/client
+05_TCP_MultiClient_Chat/server
+05_TCP_MultiClient_Chat/client
+
+# Editor & System Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
