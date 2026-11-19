@@ -1,52 +1,34 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
+#include<stdio.h>
+#include<string.h>
+#include<unistd.h>
+#include<arpa/inet.h>
 
-#define PORT 8080
-#define SERVER_IP "127.0.0.1"
-#define BUFFER_SIZE 1024
+int main()
+{
+    int s;
+    char msg[500],result[1000];
+    struct sockaddr_in server;
+    socklen_t len=sizeof(server);
 
-int main() {
-    int sock_fd;
-    char msg[BUFFER_SIZE];
-    char result[BUFFER_SIZE * 2];
-    struct sockaddr_in server_addr;
-    socklen_t addr_len = sizeof(server_addr);
+    s=socket(AF_INET,SOCK_DGRAM,0);
 
-    // 1. Create UDP socket
-    sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (sock_fd < 0) {
-        perror("Socket creation failed");
-        exit(EXIT_FAILURE);
-    }
+    server.sin_family=AF_INET;
+    server.sin_port=htons(8080);
+    server.sin_addr.s_addr=inet_addr("127.0.0.1");
 
-    // 2. Configure server address
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(PORT);
-    server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);
+    printf("Enter a sentence: ");
+    fgets(msg,sizeof(msg),stdin);
 
-    // 3. Prompt user for input
-    printf("Enter a sentence with abbreviations (e.g. 'tbh idk what to do lol asap'):\n> ");
-    if (fgets(msg, sizeof(msg), stdin) == NULL) {
-        close(sock_fd);
-        return 0;
-    }
+    sendto(s,msg,strlen(msg),0,
+        (struct sockaddr *)&server,len);
 
-    // 4. Send datagram to server
-    sendto(sock_fd, msg, strlen(msg), 0, (struct sockaddr *)&server_addr, addr_len);
+    int n=recvfrom(s,result,sizeof(result)-1,0,
+        (struct sockaddr *)&server,&len);
 
-    // 5. Receive expanded sentence
-    int n = recvfrom(sock_fd, result, sizeof(result) - 1, 0, (struct sockaddr *)&server_addr, &addr_len);
-    if (n >= 0) {
-        result[n] = '\0';
-        printf("\nTranslated Sentence:\n%s\n", result);
-    } else {
-        perror("recvfrom failed");
-    }
+    result[n]='\0';
 
-    close(sock_fd);
+    printf("\nTranslated sentence: %s\n",result);
+
+    close(s);
     return 0;
 }

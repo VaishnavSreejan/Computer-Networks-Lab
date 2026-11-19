@@ -1,45 +1,34 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
+#include<stdio.h>
+#include<unistd.h>
+#include<arpa/inet.h>
+#include<string.h>
+#include<time.h>
 
-#define PORT 8080
-#define SERVER_IP "127.0.0.1"
-#define BUFFER_SIZE 256
+int main(){
+	
+	int s;
+	char msg[100]="Time Request";
+	struct sockaddr_in server;
+	socklen_t len;
+	
+	s=socket(AF_INET,SOCK_DGRAM,0);
+	if(s<0){
+		perror("Socket creation Failed");
+		return 1;
+	}
+	
+	server.sin_family=AF_INET;
+	server.sin_port=htons(8080);
+	server.sin_addr.s_addr=inet_addr("127.0.0.1");
+	
+	len=sizeof(server);
 
-int main() {
-    int sock_fd;
-    char msg[BUFFER_SIZE] = "Time Request";
-    struct sockaddr_in server_addr;
-    socklen_t addr_len = sizeof(server_addr);
+	sendto(s,msg,strlen(msg)+1,0,(struct sockaddr *)&server,len);
+	printf("\nTime Request send to server \n");
 
-    // 1. Create UDP socket
-    sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (sock_fd < 0) {
-        perror("Socket creation failed");
-        exit(EXIT_FAILURE);
-    }
+	recvfrom(s,msg,sizeof(msg),0,(struct sockaddr *)&server,&len);
+	printf("\nCurrent time is : %s",msg);
 
-    // 2. Configure server address
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(PORT);
-    server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);
-
-    // 3. Send time request
-    sendto(sock_fd, msg, strlen(msg) + 1, 0, (struct sockaddr *)&server_addr, addr_len);
-    printf("Time request sent to server.\n");
-
-    // 4. Receive current time from server
-    int n = recvfrom(sock_fd, msg, sizeof(msg) - 1, 0, (struct sockaddr *)&server_addr, &addr_len);
-    if (n >= 0) {
-        msg[n] = '\0';
-        printf("Current Server Date & Time: %s", msg);
-    } else {
-        perror("recvfrom failed");
-    }
-
-    close(sock_fd);
-    return 0;
+	close(s);
+	return 0;
 }

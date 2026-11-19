@@ -64,3 +64,4 @@ Enter a sentence with abbreviations (e.g. 'tbh idk what to do lol asap'):
 Translated Sentence:
 to be honest I don't know what to do laughing out loud 
 ```
+

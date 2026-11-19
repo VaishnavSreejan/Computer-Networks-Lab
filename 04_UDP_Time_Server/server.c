@@ -1,60 +1,46 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <time.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
+#include<stdio.h>
+#include<unistd.h>
+#include<string.h>
+#include<arpa/inet.h>
+#include<time.h>
 
-#define PORT 8080
-#define BUFFER_SIZE 256
+int main(){
 
-int main() {
-    int sock_fd;
-    char msg[BUFFER_SIZE];
-    struct sockaddr_in server_addr, client_addr;
-    socklen_t addr_len = sizeof(client_addr);
-    time_t current_time;
+	int s;
+	char msg[100];
+	struct sockaddr_in server,client;
+	socklen_t len;
 
-    // 1. Create UDP socket
-    sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (sock_fd < 0) {
-        perror("Socket creation failed");
-        exit(EXIT_FAILURE);
-    }
+	s=socket(AF_INET,SOCK_DGRAM,0);
+	if(s<0){
+		perror("Socket creation Failed ");
+		return 1;
+	}
 
-    // 2. Configure server address
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(PORT);
-    server_addr.sin_addr.s_addr = INADDR_ANY;
+	server.sin_family=AF_INET;
+	server.sin_port=htons(8080);
+	server.sin_addr.s_addr=INADDR_ANY;
 
-    // 3. Bind socket
-    if (bind(sock_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
-        perror("Bind failed");
-        close(sock_fd);
-        exit(EXIT_FAILURE);
-    }
+	if(bind(s,(struct sockaddr *)&server,sizeof(server))<0){
+		perror("Bind Failed");
+		close(s);
+		return 1;
+	}
 
-    printf("UDP Daytime Server listening on port %d...\n", PORT);
-    printf("Waiting for client time requests...\n");
+	printf("waiting of client......\n");
+	len=sizeof(client);
 
-    // 4. Receive request from client
-    int n = recvfrom(sock_fd, msg, sizeof(msg) - 1, 0, (struct sockaddr *)&client_addr, &addr_len);
-    if (n >= 0) {
-        msg[n] = '\0';
-        printf("Client Request Received: \"%s\"\n", msg);
+	recvfrom(s,msg,sizeof(msg),0,(struct sockaddr *)&client,&len);
+	printf("\nClient Request Received \n");
+	time_t t;
+	time(&t);
+	strcpy(msg,ctime(&t));
 
-        // 5. Get current system time
-        time(&current_time);
-        char *time_str = ctime(&current_time);
-        strncpy(msg, time_str, sizeof(msg) - 1);
-        msg[sizeof(msg) - 1] = '\0';
-
-        // 6. Send time string back to client
-        sendto(sock_fd, msg, strlen(msg) + 1, 0, (struct sockaddr *)&client_addr, addr_len);
-        printf("Time sent to client: %s", msg);
-    }
-
-    close(sock_fd);
-    return 0;
+	sendto(s,msg,strlen(msg)+1,0,(struct sockaddr *)&client,len);
+	printf("\nTime sended to the client \n");
+	
+	close(s);
+	return 0;
 }
+
+	

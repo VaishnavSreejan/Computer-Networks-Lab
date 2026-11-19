@@ -47,3 +47,4 @@ Connected to Factorial Server successfully!
 Enter a number to calculate factorial: 5
 Factorial of 5 = 120
 ```
+
